@@ -26,6 +26,7 @@ body{
     position:relative;
 }
 
+/* gradient animation */
 @keyframes gradientMove{
     0%{background-position:0% 50%;}
     50%{background-position:100% 50%;}
@@ -62,12 +63,14 @@ body::before{
     z-index:2;
     max-height:90vh;
     overflow-y:auto;
+    filter:blur(10px);
 }
 
 @keyframes cinematicIntro{
     to{
         transform:scale(1);
         opacity:1;
+        filter:blur(0);
     }
 }
 
@@ -86,6 +89,10 @@ p{
 #letter::after{
     content:"|";
     animation:blink 1s infinite;
+}
+
+.done::after{
+    content:"";
 }
 
 @keyframes blink{
@@ -193,6 +200,7 @@ function typeWriter(){
         i++;
         setTimeout(typeWriter,25);
     }else{
+        document.getElementById("letter").classList.add("done");
         document.getElementById("choice").style.display="flex";
     }
 }
@@ -214,22 +222,36 @@ setInterval(createHeart,300);
 /* no button runs away */
 function moveNo(){
     const btn=document.querySelector(".no");
+    const maxX = window.innerWidth - btn.offsetWidth;
+    const maxY = window.innerHeight - btn.offsetHeight;
+
     btn.style.position="absolute";
-    btn.style.top=Math.random()*80+"%";
-    btn.style.left=Math.random()*80+"%";
+    btn.style.left = Math.random()*maxX + "px";
+    btn.style.top = Math.random()*maxY + "px";
 }
 
 /* yes button explosion */
 function acceptLove(){
-    for(let i=0;i<30;i++){
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+
+    for(let i=0;i<40;i++){
         const heart=document.createElement("div");
         heart.classList.add("explosion");
         heart.innerHTML="❤️";
-        heart.style.left=Math.random()*100+"vw";
-        heart.style.top=Math.random()*100+"vh";
+
+        heart.style.left=centerX+"px";
+        heart.style.top=centerY+"px";
+
+        heart.style.transform=`translate(
+            ${Math.random()*400-200}px,
+            ${Math.random()*400-200}px
+        )`;
+
         document.body.appendChild(heart);
         setTimeout(()=>heart.remove(),1000);
     }
+
     document.querySelector(".card").innerHTML=
     "<h1>❤️ Чи миний хамгийн сайхан сонголт ❤️</h1><p>Энэ мөчөөс эхлээд илүү гоё түүх эхэлнэ...</p>";
 }
